@@ -1,8 +1,6 @@
 import dynamic as dps
 import modal_analysis as dps_mdl
 import plotting as dps_plt
-import k2a as model_data
-import importlib
 import numpy as np
 import matplotlib.pyplot as plt
 

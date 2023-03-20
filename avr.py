@@ -43,7 +43,8 @@ if __name__ == '__main__':
     n_units = 2000
 
     import dynpssimpy.dynamic as dps
-    import k2a as model_data
+    from dynpssimpy.ps_models import k2a as model_data
+
     model = model_data.load()
     ps = dps.PowerSystemModel(model)
     ps.power_flow()

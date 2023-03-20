@@ -12,7 +12,8 @@ if __name__ == '__main__':
 
     # Load model
     #
-    import k2a as model_data
+    from dynpssimpy.ps_models import k2a as model_data
+
     #
     model = model_data.load()
 
