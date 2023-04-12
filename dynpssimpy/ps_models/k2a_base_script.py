@@ -6,6 +6,8 @@ import time
 import sys
 import dynpssimpy.dynamic as dps
 import dynpssimpy.solvers as dps_sol
+import dynpssimpy.modal_analysis as dps_mdl
+import dynpssimpy.plotting as dps_plt
 import importlib
 importlib.reload(dps)
 
@@ -27,7 +29,7 @@ if __name__ == '__main__':
     np.max(ps.ode_fun(0.0, ps.x0))
     # Specify simulation time
     #
-    t_end = 10
+    t_end = 20
     x0 = ps.x0.copy()
     # Add small perturbation to initial angle of first generator
     # x0[ps.gen_mdls['GEN'].state_idx['angle'][0]] += 1
@@ -73,6 +75,9 @@ if __name__ == '__main__':
     print('Initial values on all state variables (G1 and IB) :')
     print(x0)
     print(' ')
+    # Adding event flags for c)
+    event_flag = True
+    event_flag2 = True
     # Run simulation
     while t < t_end:
         # print(t)
@@ -82,16 +87,27 @@ if __name__ == '__main__':
           ps.y_bus_red_mod[7, 7] = 10000
         else:
            ps.y_bus_red_mod[7, 7] = 0"""
-        # simulate a short circuit at bus 5 - preliminaries
+        """# simulate a short circuit at bus 5 - preliminaries
         if 1 < t < 1.05:
             ps.y_bus_red_mod[4, 4] = 10000
         else:
-            ps.y_bus_red_mod[4, 4] = 0
+            ps.y_bus_red_mod[4, 4] = 0"""
         # Simulate next step
         result = sol.step()
         x = sol.y
         v = sol.v
         t = sol.t
+
+        # C) Compare Modal Analysis to time-domain response
+        if t >= 1 and event_flag:
+            event_flag = False
+            ps.lines['Line'].event(ps, ps.lines['Line'].par['name'][5], 'disconnect')
+        if t >= 1.05 and event_flag2:
+            event_flag2 = False
+            ps.lines['Line'].event(ps, ps.lines['Line'].par['name'][5], 'connect')
+            ps.lines['Line'].event(ps, ps.lines['Line'].par['name'][4], 'disconnect')
+
+
         # Store result
         result_dict['Global', 't'].append(sol.t)
         [result_dict[tuple(desc)].append(state) for desc, state in zip(ps.state_desc, x)]
@@ -121,14 +137,14 @@ if __name__ == '__main__':
     fig.suptitle('Generator speed, angle and electric power')
     ax[0].plot(result[('Global', 't')], result.xs(key='speed', axis='columns', level=1))
     ax[0].set_ylabel('Speed (p.u.)')
-    ax[0].legend(['G1', 'G2', 'G3', 'G4'])
+    ax[0].legend(['G1', 'G2', 'G3', 'G4'],loc='upper center', bbox_to_anchor=(1,1))
     ax[1].plot(result[('Global', 't')], result.xs(key='angle', axis='columns', level=1))
     ax[1].set_ylabel('Angle (rad.)')
-    ax[1].legend(['G1', 'G2', 'G3', 'G4'])
+    ax[1].legend(['G1', 'G2', 'G3', 'G4'],loc='upper center', bbox_to_anchor=(1,1))
     ax[2].plot(result[('Global', 't')], np.array(P_e_stored)/[900, 900, 900, 900])
     ax[2].set_ylabel('Power (p.u.)')
     ax[2].set_xlabel('time (s)')
-    ax[2].legend(['G1', 'G2', 'G3', 'G4'])
+    ax[2].legend(['G1', 'G2', 'G3', 'G4'],loc='upper center', bbox_to_anchor=(1,1))
 
     plt.figure()
     plt.plot(result[('Global', 't')], np.array(E_f_stored))
@@ -145,5 +161,28 @@ if __name__ == '__main__':
     plt.plot(result[('Global', 't')], result.xs(key='V_t_abs', axis='columns', level=1))"""
 
     # ****
+
+    # Plot eigenvalues in c)
+
+    # Perform system linearization
+    ps_lin = dps_mdl.PowerSystemModelLinearization(ps)
+    ps_lin.linearize()
+    ps_lin.eigenvalue_decomposition()
+
+    # Plot eigenvalues
+    dps_plt.plot_eigs(ps_lin.eigs)
+    plt.axis([-4, 4, -4, 4])
+    print(ps_lin.eigs)
+
+    # Get mode shape for electromechanical modes
+    mode_idx = ps_lin.get_mode_idx(['em'], damp_threshold=0.3)
+    rev = ps_lin.rev
+    mode_shape = rev[np.ix_(ps.gen['GEN'].state_idx_global['speed'], mode_idx)]
+
+    # Plot mode shape
+    fig, ax = plt.subplots(1, mode_shape.shape[1], subplot_kw={'projection': 'polar'})
+    for ax_, ms in zip(ax, mode_shape.T):
+        dps_plt.plot_mode_shape(ms, ax=ax_, normalize=True)
+    # plt.show()
 
     plt.show()
