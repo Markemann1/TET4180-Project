@@ -1,10 +1,10 @@
 import threading
-import dynpssimpy.dynamic as dps
+import dynamic as dps
 import importlib
 import time
 from collections import defaultdict
 import matplotlib.pyplot as plt
-import dynpssimpy.utility_functions as dps_uf
+import utility_functions as dps_uf
 
 
 class RealTimeSimulator(threading.Thread):

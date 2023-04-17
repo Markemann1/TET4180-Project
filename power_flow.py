@@ -126,47 +126,47 @@ if __name__ == '__main__':
     
     #print('Ybus26 =',ps.y_bus[1,5])
     print('P from 2 to 6 =', "{:.2f}".format(Pflow26*1000), ' MW')
-    print('Q from 2 to 6 = ',"{:.2f}".format(Qflow26*1000), ' MW')
+    print('Q from 2 to 6 = ',"{:.2f}".format(Qflow26*1000), ' MVAr')
     print('----------------------------------')
     
     #print('Ybus67 =',ps.y_bus[5,6])
     print('P from 6 to 7 =', "{:.2f}".format(Pflow67*1000), ' MW')
-    print('Q from 6 to 7 = ',"{:.2f}".format(Qflow67*1000), ' MW')
+    print('Q from 6 to 7 = ',"{:.2f}".format(Qflow67*1000), ' MVAr')
     print('----------------------------------')
     
     #print('Ybus65 =',ps.y_bus[5,4])
     print('P from 5 to 6 =', "{:.2f}".format(Pflow56*1000), ' MW')
-    print('Q from 5 to 6= ',"{:.2f}".format(Qflow56*1000), ' MW')
+    print('Q from 5 to 6= ',"{:.2f}".format(Qflow56*1000), ' MVAr')
     print('----------------------------------')
     
     #print('Ybus78 =',ps.y_bus[6,7])
     print('P from 7 to 8 =', "{:.2f}".format(Pflow78*1000), ' MW')
-    print('Q from 7 to 8 = ',"{:.2f}".format(Qflow78*1000), ' MW')
+    print('Q from 7 to 8 = ',"{:.2f}".format(Qflow78*1000), ' MVAr')
     print('----------------------------------')
     
     #print('Ybus311 =',ps.y_bus[2,10])
     print('P from 3 to 11 =', "{:.2f}".format(Pflow311*1000), ' MW')
-    print('Q from 3 to 11 = ',"{:.2f}".format(Qflow311*1000), ' MW')
+    print('Q from 3 to 11 = ',"{:.2f}".format(Qflow311*1000), ' MVAr')
     print('----------------------------------')
     
     #print('Ybus410 =',ps.y_bus[3,9])
     print('P from 4 to 10 =', "{:.2f}".format(Pflow410*1000), ' MW')
-    print('Q from 4 to 10 = ', "{:.2f}".format(Qflow410*1000), ' MW')
+    print('Q from 4 to 10 = ', "{:.2f}".format(Qflow410*1000), ' MVAr')
     print('----------------------------------')
     
     #print('Ybus109 =',ps.y_bus[9,8])
     print('P from 10 to 9 =', "{:.2f}".format(Pflow109*1000), ' MW')
-    print('Q from 10 to 9 = ', "{:.2f}".format(Qflow109*1000), ' MW')
+    print('Q from 10 to 9 = ', "{:.2f}".format(Qflow109*1000), ' MVAr')
     print('----------------------------------')
     
     #print('Ybus1011 =',ps.y_bus[9,10])
     print('P from 11 to 10 =', "{:.2f}".format(Pflow1110*1000), ' MW')
-    print('Q from 11 to 10 = ', "{:.2f}".format(Qflow1110*1000), ' MW')
+    print('Q from 11 to 10 = ', "{:.2f}".format(Qflow1110*1000), ' MVAr')
     print('----------------------------------')
     
     #print('Ybus119 =',ps.y_bus[10,8])
     print('P from 8 to 9 =', "{:.2f}".format(Pflow98*1000), ' MW')
-    print('Q from 8 to 9 = ', "{:.2f}".format(Qflow98*1000), ' MW')
+    print('Q from 8 to 9 = ', "{:.2f}".format(Qflow98*1000), ' MVAr')
     print('----------------------------------')
     
     #

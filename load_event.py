@@ -14,7 +14,7 @@ import plotting as dps_plt
 if __name__ == '__main__':
 
     # Load model
-    import k2a_hygov_tgov as model_data
+    import k2a as model_data    # k2a_hygov_tgov
     # import ps_models.ieee39 as model_data
     # import ps_models.n44 as model_data
 
@@ -43,7 +43,7 @@ if __name__ == '__main__':
     ps.ode_fun(0.0, ps.x0)
     x0 = ps.x0.copy()
     t = 0
-    t_end = 20 # End of simulation
+    t_end = 40 # End of simulation
     sol = RK45(ps.ode_fun, 0, x0, t_end, max_step=2e-2)
     result_dict = defaultdict(list)
 
@@ -130,6 +130,8 @@ if __name__ == '__main__':
     ax.plot(t_plot, p3.values)                              # Plotting two variables in same plot
     ax.plot(t_plot, p4.values)
     ax.legend(legnd3 + legnd4,bbox_to_anchor=(1,1))
+    fig.tight_layout()
+    # plt.savefig('plotttttttttt.png', bbox_inches='tight')
     ax.set_ylabel('Power gen')
     
     fig, ax2 = plt.subplots(1)
