@@ -8,6 +8,7 @@ import dynpssimpy.dynamic as dps
 import dynpssimpy.solvers as dps_sol
 import dynpssimpy.modal_analysis as dps_mdl
 import dynpssimpy.plotting as dps_plt
+import dynpssimpy.utility_functions as dps_uf
 import importlib
 importlib.reload(dps)
 
@@ -15,7 +16,7 @@ importlib.reload(dps)
 if __name__ == '__main__':
 
     # Load model
-    import dynpssimpy.ps_models.k2a_no_controls as model_data
+    import dynpssimpy.ps_models.k2a_base_case_with_AVRs_and_GOVs as model_data
     model = model_data.load()
 
     # Power system model
@@ -29,7 +30,7 @@ if __name__ == '__main__':
     np.max(ps.ode_fun(0.0, ps.x0))
     # Specify simulation time
     #
-    t_end = 20
+    t_end = 25
     x0 = ps.x0.copy()
     # Add small perturbation to initial angle of first generator
     # x0[ps.gen_mdls['GEN'].state_idx['angle'][0]] += 1
@@ -87,11 +88,11 @@ if __name__ == '__main__':
           ps.y_bus_red_mod[7, 7] = 10000
         else:
            ps.y_bus_red_mod[7, 7] = 0"""
-        """# simulate a short circuit at bus 5 - preliminaries
-        if 1 < t < 1.05:
-            ps.y_bus_red_mod[4, 4] = 10000
+        # simulate a short circuit at bus 8 - preliminaries
+        """if 1 < t < 1.05:
+            ps.y_bus_red_mod[5, 5] = 10000
         else:
-            ps.y_bus_red_mod[4, 4] = 0"""
+            ps.y_bus_red_mod[5, 5] = 0"""
         # Simulate next step
         result = sol.step()
         x = sol.y
@@ -99,15 +100,28 @@ if __name__ == '__main__':
         t = sol.t
 
         # C) Compare Modal Analysis to time-domain response
-        if t >= 1 and event_flag:
+        """if t >= 1 and event_flag:
             event_flag = False
             ps.lines['Line'].event(ps, ps.lines['Line'].par['name'][5], 'disconnect')
         if t >= 1.05 and event_flag2:
             event_flag2 = False
             ps.lines['Line'].event(ps, ps.lines['Line'].par['name'][5], 'connect')
-            ps.lines['Line'].event(ps, ps.lines['Line'].par['name'][4], 'disconnect')
-
-
+            ps.lines['Line'].event(ps, ps.lines['Line'].par['name'][5], 'disconnect')"""
+        # Similar to the commented lines over - only different way to simulate the fault
+        """if t >= 1 and event_flag:
+            event_flag = False
+            ps.y_bus_red_mod[7, 7] = 10000
+        if t >= 1.05 and event_flag2:
+            event_flag2 = False
+            ps.y_bus_red_mod[7, 7] = 0
+            ps.lines['Line'].event(ps, ps.lines['Line'].par['name'][5], 'disconnect')"""
+        """# D) Frequency and voltage control
+        # load event at bus 8
+        if 5 < t < 15:
+            ps.y_bus_red_mod[5, 5] = 0.1 + 1j * 0.0
+        else:
+            ps.y_bus_red_mod[5, 5] = 0
+"""
         # Store result
         result_dict['Global', 't'].append(sol.t)
         [result_dict[tuple(desc)].append(state) for desc, state in zip(ps.state_desc, x)]
@@ -159,30 +173,18 @@ if __name__ == '__main__':
     # ** Plot for 1a)
     """plt.figure()
     plt.plot(result[('Global', 't')], result.xs(key='V_t_abs', axis='columns', level=1))"""
+    # print(ps_lin.eigs)
 
-    # ****
-
-    # Plot eigenvalues in c)
-
-    # Perform system linearization
-    ps_lin = dps_mdl.PowerSystemModelLinearization(ps)
-    ps_lin.linearize()
-    ps_lin.eigenvalue_decomposition()
-
-    # Plot eigenvalues
-    dps_plt.plot_eigs(ps_lin.eigs)
-    plt.axis([-4, 4, -4, 4])
-    print(ps_lin.eigs)
-
-    # Get mode shape for electromechanical modes
+    """# Get mode shape for electromechanical modes
     mode_idx = ps_lin.get_mode_idx(['em'], damp_threshold=0.3)
     rev = ps_lin.rev
-    mode_shape = rev[np.ix_(ps.gen['GEN'].state_idx_global['speed'], mode_idx)]
+    mode_shape = rev[np.ix_(ps.gen['GEN'].state_idx_global['speed'], mode_idx)]"""
 
-    # Plot mode shape
+    """# Plot mode shape
     fig, ax = plt.subplots(1, mode_shape.shape[1], subplot_kw={'projection': 'polar'})
     for ax_, ms in zip(ax, mode_shape.T):
-        dps_plt.plot_mode_shape(ms, ax=ax_, normalize=True)
-    # plt.show()
-
+        dps_plt.plot_mode_shape(ms, ax=ax_, normalize=True)"""
     plt.show()
+
+
+    # plt.show()

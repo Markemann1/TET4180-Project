@@ -33,9 +33,9 @@ index = dps_uf.lookup_strings('G3', ps.gen_mdls['GEN'].par['name'])  # Index for
 for i in range(30):
     ps.init_dyn_sim()
     print(index)
-    ps.gov_mdls['TGOV1'].par['R'][index] = 0.1 + i*0.01   #change in TGOV1 in G3 or G4
-    ps.gov_mdls['HYGOV'].par['R'][index] = 0.1 + i*0.01   #change in HYGOV in G1 or G2
-    ps.avr_mdls['SEXS'].par['K'][index] = 10 + i*10       #change in SEXS in any G
+    #ps.gov_mdls['TGOV1'].par['R'][index] = 0.1 + i*0.01   #change in TGOV1 in G3 or G4
+    #ps.gov_mdls['HYGOV'].par['R'][index] = 0.1 + i*0.01   #change in HYGOV in G1 or G2
+    #ps.avr_mdls['SEXS'].par['K'][index] = 10 + i*10       #change in SEXS in any G
     ps.gen_mdls['GEN'].par['H'][index] = 1 + i*0.3        #change in H in any G
     
     # Perform system linearization
